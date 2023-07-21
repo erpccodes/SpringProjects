@@ -1,0 +1,5 @@
+package app.contactManager.service;
+
+public class AppConfig {
+
+}

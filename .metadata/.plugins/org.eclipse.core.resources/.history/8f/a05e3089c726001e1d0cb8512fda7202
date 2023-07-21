@@ -1,0 +1,5 @@
+package app.contactManager.entity;
+
+public class User {
+
+}

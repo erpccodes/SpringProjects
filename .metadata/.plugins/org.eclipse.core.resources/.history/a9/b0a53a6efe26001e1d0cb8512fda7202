@@ -1,0 +1,56 @@
+package app.contactManager.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+
+import app.contactManager.entity.Contact;
+import app.contactManager.repository.ContactRepository;
+
+@Controller
+public class ContactController {
+
+    @Autowired
+    private ContactRepository contactRepository;
+
+    @GetMapping("/contacts")
+    public String showContacts(Model model) {
+        // Get the currently authenticated user
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+
+        // Fetch contacts associated with the logged-in user from the database
+        Iterable<Contact> contacts = contactRepository.findAllByUserUsername(username);
+
+        // Add contacts to the model for display on the front-end
+        model.addAttribute("contacts", contacts);
+
+        return "contact-list";
+    }
+
+    @GetMapping("/add-contact")
+    public String showAddContactForm(Model model) {
+        model.addAttribute("contact", new Contact());
+        return "add-contact-form";
+    }
+
+    @PostMapping("/add-contact")
+    public String processAddContactForm(Contact contact) {
+        // Get the currently authenticated user
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+
+        // Find the user associated with the logged-in username
+        User user = userRepository.findByUsername(username);
+
+        // Associate the contact with the user
+        contact.setUser(user);
+
+        // Save the contact to the database
+        contactRepository.save(contact);
+
+        // Redirect to the contact list page
+        return "redirect:/contacts";
+    }
+}

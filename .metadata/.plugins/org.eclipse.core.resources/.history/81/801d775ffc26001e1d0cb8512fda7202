@@ -1,0 +1,27 @@
+package app.contactManager.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+
+import app.contactManager.entity.Contact;
+import app.contactManager.repository.ContactRepository;
+import org.springframework.ui.Model;
+
+@Controller
+public class ContactController {
+
+    @Autowired
+    private ContactRepository contactRepository;
+
+    @GetMapping("/contacts")
+    public String showContacts(Model model) {
+        // Fetch all contacts from the database
+        Iterable<Contact> contacts = contactRepository.findAll();
+
+        // Add contacts to the model for display on the front-end
+        model.addAttribute("contacts", contacts);
+
+        return "contact-list"; // Return the name of the Thymeleaf template to be rendered
+    }
+}

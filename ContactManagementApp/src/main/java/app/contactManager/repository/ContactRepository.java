@@ -1,0 +1,13 @@
+package app.contactManager.repository;
+
+import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import app.contactManager.entity.Contact;
+import app.contactManager.entity.User;
+
+public interface ContactRepository extends JpaRepository<Contact, Long> {
+    List<Contact> findByUser(User user);
+    List<Contact> findAllByUserUsername(String username);
+}

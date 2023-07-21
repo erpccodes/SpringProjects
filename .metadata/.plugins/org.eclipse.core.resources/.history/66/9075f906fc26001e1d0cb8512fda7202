@@ -1,0 +1,5 @@
+package app.contactManager.controller;
+
+public class ContactController {
+
+}

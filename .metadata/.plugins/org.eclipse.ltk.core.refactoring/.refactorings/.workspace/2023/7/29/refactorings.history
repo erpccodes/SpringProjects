@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">&#x0A;<refactoring comment="Delete resource &apos;stream-api-exercises&apos;" deleteContents="true" description="Delete resource &apos;stream-api-exercises&apos;" element1="/stream-api-exercises" flags="7" id="org.eclipse.ltk.core.refactoring.delete.resources" resources="1" stamp="1689785880154"/>&#x0A;<refactoring comment="Delete resource &apos;fileUploardManager&apos;" deleteContents="false" description="Delete resource &apos;fileUploardManager&apos;" element1="/fileUploardManager" flags="7" id="org.eclipse.ltk.core.refactoring.delete.resources" resources="1" stamp="1689924763093"/>
+</session>

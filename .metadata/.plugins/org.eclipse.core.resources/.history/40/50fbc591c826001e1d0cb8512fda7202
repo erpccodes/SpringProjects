@@ -1,0 +1,5 @@
+package app.contactManager.repository;
+
+public interface UserRepository {
+
+}

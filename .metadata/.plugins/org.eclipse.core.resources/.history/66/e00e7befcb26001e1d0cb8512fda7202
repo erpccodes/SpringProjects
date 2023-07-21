@@ -1,0 +1,34 @@
+package app.contactManager.service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+//UserDetailsServiceImpl.java
+@Service
+public class UserDetailsServiceImpl implements UserDetailsService {
+ @Autowired
+ private UserService userService;
+
+ @Override
+ public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+     User user = userService.getUserByUsername(username);
+     if (user == null) {
+         throw new UsernameNotFoundException("User not found with username: " + username);
+     }
+
+     return new org.springframework.security.core.userdetails.User(
+         user.getUsername(),
+         user.getPassword(),
+         getAuthorities(user)
+     );
+ }
+
+ private Collection<? extends GrantedAuthority> getAuthorities(User user) {
+     // You can customize the roles and authorities based on your application's needs.
+     List<GrantedAuthority> authorities = new ArrayList<>();
+     authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+     // Add other roles as needed.
+
+     return authorities;
+ }
+}

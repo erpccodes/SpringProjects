@@ -1,0 +1,65 @@
+package app.contactManager.security;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
+
+
+
+@Configuration
+@EnableWebSecurity
+public class SecurityConfig {
+
+	@Autowired
+	@Qualifier("userDetailsServiceImpl")
+    private UserDetailsService userDetailsService;
+
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+   
+    
+    @Bean
+    public AuthenticationManager authenticationManagerBean(AuthenticationConfiguration authz) throws Exception {
+        return authz.getAuthenticationManager();
+    }
+    
+    @Autowired
+    public void configure(AuthenticationManagerBuilder auth) throws Exception {
+    	  auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
+    	}
+
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+      // Configure the security filters
+    	return http.authorizeHttpRequests(authz -> authz
+                        .requestMatchers("/register","/login").permitAll()
+                        .requestMatchers("/contacts/**").hasRole("USER")// Restrict access to /contacts/** to users with ROLE_USER
+                        .anyRequest().authenticated()
+        
+                )
+                .formLogin(login -> login
+                        .loginPage("/login")
+                        .permitAll()
+                )
+                .logout(logout -> logout
+                        .logoutUrl("/logout") // Specify the logout URL
+                        .logoutSuccessUrl("/login?logout") // Redirect to login page after logout
+                        .invalidateHttpSession(true)
+                        .deleteCookies("JSESSIONID")
+                        .permitAll()
+                )
+                .build();
+    }
+}
+
